@@ -61,6 +61,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.layer.cornerRadius = 18
+
         
     }
     
@@ -190,10 +192,73 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
         
     }
     
+    func skipToFinalStep(solution: [(pourOp: PourOperationType, sourceLevel: Int, destLevel: Int, isXSource: Bool)]){
+        
+        solutionStepData = []
+        var solutionStepIndex = 0
+        
+        for solutionStep in solution {
+                
+            var lastSolutionStep : (pourOp: PourOperationType, sourceLevel: Int, destLevel: Int, isXSource: Bool)?
+            if solutionStepIndex > 0 {
+                lastSolutionStep = solution[solutionStepIndex - 1]
+            } else {
+                //put a dummy zero value here in the case we are on the first step, since the last fill values will always be zero in that case
+                lastSolutionStep = (PourOperationType.EmptyDestination, 0,0,false)
+            }
+            
+            switch solutionStep.pourOp {
+            case PourOperationType.FillSource:
+                if solutionStep.isXSource {
+                    
+                    //add solution step to table view
+                    solutionStepData.append((solutionStepIndex + 1,"Fill X to \(solutionStep.sourceLevel), Y still \(lastSolutionStep!.destLevel)"))
+                    
+                } else {
+                    //add solution step to table view
+                    solutionStepData.append((solutionStepIndex + 1,"Fill Y to \(solutionStep.sourceLevel), X still \(lastSolutionStep!.destLevel)"))
+                    
+                }
+                break
+            case PourOperationType.PourFromSourceToDestination:
+                if solutionStep.isXSource {
+            
+                    //add solution step to table view
+                    solutionStepData.append((solutionStepIndex + 1, "Pour X to Y, X now \(solutionStep.sourceLevel), Y now \(solutionStep.destLevel) "))
+                } else {
+                    //add solution step to table view
+    
+                    solutionStepData.append((solutionStepIndex + 1, "Pour Y to X, Y now \(solutionStep.sourceLevel), X now \(solutionStep.destLevel) "))
+                }
+                break
+            case PourOperationType.EmptyDestination:
+                if solutionStep.isXSource {
+                    //add solution step to table view
+                    solutionStepData.append((solutionStepIndex + 1,"Drain Y to \(solutionStep.destLevel), X still \(lastSolutionStep!.sourceLevel)"))
+                } else {
+                    //add solution step to table view
+                    solutionStepData.append((solutionStepIndex + 1,"Drain X to \(solutionStep.destLevel), Y still \(lastSolutionStep!.sourceLevel)"))
+                }
+                break
+            
+            
+            }
+            solutionStepIndex += 1
+        }
+        
+    }
+    
+    
     func doSolutionStep(solution: [(pourOp: PourOperationType, sourceLevel: Int, destLevel: Int, isXSource: Bool)], stepsRemaining: Int)  {
         
         //base case
-        if stepsRemaining == 0 {
+        if stepsRemaining == 0 || skipMode {
+            
+            if skipMode {
+                skipToFinalStep(solution: solution)
+                tableView.reloadData()
+                scrollToBottom()
+            }
             
             //set to final level
             let finalStep = solution[solution.count - 1]
@@ -217,7 +282,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
             return
         }
         
-        solveButton.setTitle("Skip \(stepsRemaining) steps", for: UIControl.State.normal)
+        if !skipMode {
+            solveButton.setTitle("Skip \(stepsRemaining) steps", for: UIControl.State.normal)
+        }
+        
         
         
         let solutionStepIndex = solution.count - stepsRemaining
@@ -236,11 +304,15 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
         switch solutionStep.pourOp {
         case PourOperationType.FillSource:
             if solutionStep.isXSource {
-                //fill x to sourceLevel
-                fillXFaucet.turnOnFaucet()
+                
                 
                 //add solution step to table view
                 solutionStepData.append((solutionStepIndex + 1,"Fill X to \(solutionStep.sourceLevel), Y still \(lastSolutionStep!.destLevel)"))
+                
+                
+                //fill x to sourceLevel
+                fillXFaucet.turnOnFaucet()
+                
                 tableView.reloadData()
                 
                 waterJugX.setJugWaterLevel(toLevel: solutionStep.sourceLevel, animated: !skipMode) {
@@ -249,12 +321,16 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
                     //recursive step
                     self.doSolutionStep(solution: solution, stepsRemaining: stepsRemaining - 1)
                 }
+                
             } else {
-                //fill y to sourceLevel
-                fillYFaucet.turnOnFaucet()
+                
                 
                 //add solution step to table view
                 solutionStepData.append((solutionStepIndex + 1,"Fill Y to \(solutionStep.sourceLevel), X still \(lastSolutionStep!.destLevel)"))
+                
+                //fill y to sourceLevel
+                fillYFaucet.turnOnFaucet()
+                
                 tableView.reloadData()
                 
                 waterJugY.setJugWaterLevel(toLevel: solutionStep.sourceLevel, animated: !skipMode) {
@@ -263,16 +339,21 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
                     //recursive step
                     self.doSolutionStep(solution: solution, stepsRemaining: stepsRemaining - 1)
                 }
+                
+                
             }
             
             break
         case PourOperationType.PourFromSourceToDestination:
             if solutionStep.isXSource {
-                //set x to source level
-                xToYFaucet.turnOnFaucet()
+                
                 
                 //add solution step to table view
                 solutionStepData.append((solutionStepIndex + 1, "Pour X to Y, X now \(solutionStep.sourceLevel), Y now \(solutionStep.destLevel) "))
+                
+                //set x to source level
+                xToYFaucet.turnOnFaucet()
+                
                 tableView.reloadData()
                 
                 waterJugX.setJugWaterLevel(toLevel: solutionStep.sourceLevel, animated: !skipMode) {
@@ -287,12 +368,16 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
                 waterJugY.setJugWaterLevel(toLevel: solutionStep.destLevel, animated: !skipMode) {
                     
                 }
+                
             } else {
-                //set y to source level
-                yToXFaucet.turnOnFaucet()
+                
                 
                 //add solution step to table view
                 solutionStepData.append((solutionStepIndex + 1, "Pour Y to X, Y now \(solutionStep.sourceLevel), X now \(solutionStep.destLevel) "))
+                
+                //set y to source level
+                yToXFaucet.turnOnFaucet()
+                
                 tableView.reloadData()
                 
                 waterJugY.setJugWaterLevel(toLevel: solutionStep.sourceLevel, animated: !skipMode) {
@@ -307,16 +392,19 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
                 waterJugX.setJugWaterLevel(toLevel: solutionStep.destLevel, animated: !skipMode) {
                     
                 }
+                
             }
             break
         case PourOperationType.EmptyDestination:
             if solutionStep.isXSource {
-                //set y to dest level
-                drainYFaucet.turnOnFaucet()
+                
                 
                 //add solution step to table view
                 solutionStepData.append((solutionStepIndex + 1,"Drain Y to \(solutionStep.destLevel), X still \(lastSolutionStep!.sourceLevel)"))
                 tableView.reloadData()
+                
+                //set y to dest level
+                drainYFaucet.turnOnFaucet()
                 
                 waterJugY.setJugWaterLevel(toLevel: solutionStep.destLevel, animated: !skipMode) {
                     self.drainYFaucet.turnOffFaucet()
@@ -326,12 +414,17 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
                     self.doSolutionStep(solution: solution, stepsRemaining: stepsRemaining - 1)
                     
                 }
+                
+                
             } else {
-                //set x to dest level
-                drainXFaucet.turnOnFaucet()
+                
                 
                 //add solution step to table view
                 solutionStepData.append((solutionStepIndex + 1,"Drain X to \(solutionStep.destLevel), Y still \(lastSolutionStep!.sourceLevel)"))
+                
+                //set x to dest level
+                drainXFaucet.turnOnFaucet()
+                
                 tableView.reloadData()
                 
                 waterJugX.setJugWaterLevel(toLevel: solutionStep.destLevel, animated: !skipMode) {
@@ -342,6 +435,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
                     self.doSolutionStep(solution: solution, stepsRemaining: stepsRemaining - 1)
                     
                 }
+                
+                
             }
             break
   
