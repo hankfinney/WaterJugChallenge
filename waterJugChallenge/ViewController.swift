@@ -192,63 +192,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
         
     }
     
-    func skipToFinalStep(solution: [(pourOp: PourOperationType, sourceLevel: Int, destLevel: Int, isXSource: Bool)]){
-        
-        solutionStepData = []
-        var solutionStepIndex = 0
-        
-        for solutionStep in solution {
-                
-            var lastSolutionStep : (pourOp: PourOperationType, sourceLevel: Int, destLevel: Int, isXSource: Bool)?
-            if solutionStepIndex > 0 {
-                lastSolutionStep = solution[solutionStepIndex - 1]
-            } else {
-                //put a dummy zero value here in the case we are on the first step, since the last fill values will always be zero in that case
-                lastSolutionStep = (PourOperationType.EmptyDestination, 0,0,false)
-            }
-            
-            switch solutionStep.pourOp {
-            case PourOperationType.FillSource:
-                if solutionStep.isXSource {
-                    
-                    //add solution step to table view
-                    solutionStepData.append((solutionStepIndex + 1,"Fill X to \(solutionStep.sourceLevel), Y still \(lastSolutionStep!.destLevel)"))
-                    
-                } else {
-                    //add solution step to table view
-                    solutionStepData.append((solutionStepIndex + 1,"Fill Y to \(solutionStep.sourceLevel), X still \(lastSolutionStep!.destLevel)"))
-                    
-                }
-                break
-            case PourOperationType.PourFromSourceToDestination:
-                if solutionStep.isXSource {
-            
-                    //add solution step to table view
-                    solutionStepData.append((solutionStepIndex + 1, "Pour X to Y, X now \(solutionStep.sourceLevel), Y now \(solutionStep.destLevel) "))
-                } else {
-                    //add solution step to table view
-    
-                    solutionStepData.append((solutionStepIndex + 1, "Pour Y to X, Y now \(solutionStep.sourceLevel), X now \(solutionStep.destLevel) "))
-                }
-                break
-            case PourOperationType.EmptyDestination:
-                if solutionStep.isXSource {
-                    //add solution step to table view
-                    solutionStepData.append((solutionStepIndex + 1,"Drain Y to \(solutionStep.destLevel), X still \(lastSolutionStep!.sourceLevel)"))
-                } else {
-                    //add solution step to table view
-                    solutionStepData.append((solutionStepIndex + 1,"Drain X to \(solutionStep.destLevel), Y still \(lastSolutionStep!.sourceLevel)"))
-                }
-                break
-            
-            
-            }
-            solutionStepIndex += 1
-        }
-        
-    }
-    
-    
+
     func doSolutionStep(solution: [(pourOp: PourOperationType, sourceLevel: Int, destLevel: Int, isXSource: Bool)], stepsRemaining: Int)  {
         
         //base case
@@ -286,34 +230,28 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
             solveButton.setTitle("Skip \(stepsRemaining) steps", for: UIControl.State.normal)
         }
         
-        
-        
         let solutionStepIndex = solution.count - stepsRemaining
         let solutionStep = solution[solutionStepIndex]
         
         
-        var lastSolutionStep : (pourOp: PourOperationType, sourceLevel: Int, destLevel: Int, isXSource: Bool)?
+        var lastSolutionState : (sourceLevel: Int, destLevel: Int)?
         if solutionStepIndex > 0 {
-            lastSolutionStep = solution[solutionStepIndex - 1]
+            lastSolutionState = (solution[solutionStepIndex - 1].sourceLevel, solution[solutionStepIndex - 1].destLevel)
         } else {
-            //put a dummy zero value here in the case we are on the first step, since the last fill values will always be zero in that case 
-            lastSolutionStep = (PourOperationType.EmptyDestination, 0,0,false)
+            //put a dummy zero value here in the case we are on the first step, since the last fill values will always be zero in that case
+            lastSolutionState = (0,0)
         }
   
+        solutionStepData.append((solutionStepIndex+1,getTextForSolutionStep(solutionStep: solutionStep, lastSolutionState: lastSolutionState!, solutionStepIndex: solutionStepIndex)))
+        
+        tableView.reloadData()
         
         switch solutionStep.pourOp {
         case PourOperationType.FillSource:
             if solutionStep.isXSource {
                 
-                
-                //add solution step to table view
-                solutionStepData.append((solutionStepIndex + 1,"Fill X to \(solutionStep.sourceLevel), Y still \(lastSolutionStep!.destLevel)"))
-                
-                
                 //fill x to sourceLevel
                 fillXFaucet.turnOnFaucet()
-                
-                tableView.reloadData()
                 
                 waterJugX.setJugWaterLevel(toLevel: solutionStep.sourceLevel, animated: !skipMode) {
                     self.fillXFaucet.turnOffFaucet()
@@ -324,14 +262,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
                 
             } else {
                 
-                
-                //add solution step to table view
-                solutionStepData.append((solutionStepIndex + 1,"Fill Y to \(solutionStep.sourceLevel), X still \(lastSolutionStep!.destLevel)"))
-                
                 //fill y to sourceLevel
                 fillYFaucet.turnOnFaucet()
-                
-                tableView.reloadData()
                 
                 waterJugY.setJugWaterLevel(toLevel: solutionStep.sourceLevel, animated: !skipMode) {
                     self.fillYFaucet.turnOffFaucet()
@@ -347,14 +279,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
         case PourOperationType.PourFromSourceToDestination:
             if solutionStep.isXSource {
                 
-                
-                //add solution step to table view
-                solutionStepData.append((solutionStepIndex + 1, "Pour X to Y, X now \(solutionStep.sourceLevel), Y now \(solutionStep.destLevel) "))
-                
                 //set x to source level
                 xToYFaucet.turnOnFaucet()
-                
-                tableView.reloadData()
                 
                 waterJugX.setJugWaterLevel(toLevel: solutionStep.sourceLevel, animated: !skipMode) {
                     
@@ -371,14 +297,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
                 
             } else {
                 
-                
-                //add solution step to table view
-                solutionStepData.append((solutionStepIndex + 1, "Pour Y to X, Y now \(solutionStep.sourceLevel), X now \(solutionStep.destLevel) "))
-                
                 //set y to source level
                 yToXFaucet.turnOnFaucet()
-                
-                tableView.reloadData()
                 
                 waterJugY.setJugWaterLevel(toLevel: solutionStep.sourceLevel, animated: !skipMode) {
                     
@@ -398,11 +318,6 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
         case PourOperationType.EmptyDestination:
             if solutionStep.isXSource {
                 
-                
-                //add solution step to table view
-                solutionStepData.append((solutionStepIndex + 1,"Drain Y to \(solutionStep.destLevel), X still \(lastSolutionStep!.sourceLevel)"))
-                tableView.reloadData()
-                
                 //set y to dest level
                 drainYFaucet.turnOnFaucet()
                 
@@ -418,14 +333,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
                 
             } else {
                 
-                
-                //add solution step to table view
-                solutionStepData.append((solutionStepIndex + 1,"Drain X to \(solutionStep.destLevel), Y still \(lastSolutionStep!.sourceLevel)"))
-                
                 //set x to dest level
                 drainXFaucet.turnOnFaucet()
-                
-                tableView.reloadData()
                 
                 waterJugX.setJugWaterLevel(toLevel: solutionStep.destLevel, animated: !skipMode) {
                     self.drainXFaucet.turnOffFaucet()
@@ -443,6 +352,71 @@ class ViewController: UIViewController, UIPickerViewDelegate, UITableViewDelegat
         }
         
       
+        
+    }
+    
+    func getTextForSolutionStep(solutionStep: (pourOp: PourOperationType, sourceLevel: Int, destLevel: Int, isXSource: Bool), lastSolutionState: (sourceLevel: Int, destLevel: Int), solutionStepIndex: Int) -> String {
+        
+        var retStr : String = ""
+        
+        switch solutionStep.pourOp {
+        case PourOperationType.FillSource:
+            if solutionStep.isXSource {
+                
+                //add solution step to table view
+                retStr = "Fill X to \(solutionStep.sourceLevel), Y still \(lastSolutionState.destLevel)"
+            } else {
+                //add solution step to table view
+                retStr = "Fill Y to \(solutionStep.sourceLevel), X still \(lastSolutionState.destLevel)"
+            }
+            break
+        case PourOperationType.PourFromSourceToDestination:
+            if solutionStep.isXSource {
+        
+                //add solution step to table view
+                retStr = "Pour X to Y, X now \(solutionStep.sourceLevel), Y now \(solutionStep.destLevel) "
+            } else {
+                //add solution step to table view
+                retStr = "Pour Y to X, Y now \(solutionStep.sourceLevel), X now \(solutionStep.destLevel) "
+            }
+            break
+        case PourOperationType.EmptyDestination:
+            if solutionStep.isXSource {
+                //add solution step to table view
+                retStr = "Drain Y to \(solutionStep.destLevel), X still \(lastSolutionState.sourceLevel)"
+            } else {
+                //add solution step to table view
+                retStr = "Drain X to \(solutionStep.destLevel), Y still \(lastSolutionState.sourceLevel)"
+            }
+            break
+        
+        
+        }
+        return retStr
+    }
+    
+    
+    func skipToFinalStep(solution: [(pourOp: PourOperationType, sourceLevel: Int, destLevel: Int, isXSource: Bool)]){
+        
+        solutionStepData = []
+        var solutionStepIndex = 0
+        
+        for solutionStep in solution {
+                
+            
+            var lastSolutionState : (sourceLevel: Int, destLevel: Int)?
+            if solutionStepIndex > 0 {
+                lastSolutionState = (solution[solutionStepIndex - 1].sourceLevel, solution[solutionStepIndex - 1].destLevel)
+            } else {
+                //put a dummy zero value here in the case we are on the first step, since the last fill values will always be zero in that case
+                lastSolutionState = (0,0)
+            }
+            
+            
+            solutionStepData.append((solutionStepIndex+1,getTextForSolutionStep(solutionStep: solutionStep, lastSolutionState: lastSolutionState!, solutionStepIndex: solutionStepIndex)))
+            
+            solutionStepIndex += 1
+        }
         
     }
     

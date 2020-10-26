@@ -94,8 +94,8 @@
             filePath = "waterJugChallenge/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "302"
-            endingLineNumber = "302"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
             landmarkName = "doSolutionStep(solution:stepsRemaining:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -190,8 +190,8 @@
             filePath = "waterJugChallenge/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "286"
-            endingLineNumber = "286"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
             landmarkName = "doSolutionStep(solution:stepsRemaining:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +206,8 @@
             filePath = "waterJugChallenge/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "256"
-            endingLineNumber = "256"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
             landmarkName = "doSolutionStep(solution:stepsRemaining:)"
             landmarkType = "7">
          </BreakpointContent>
