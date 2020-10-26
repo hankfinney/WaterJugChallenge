@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F0B46A52545C24200BF0C4A /* WaterJug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0B46A42545C24200BF0C4A /* WaterJug.swift */; };
+		7F0B46B02546415800BF0C4A /* WaterFaucet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0B46AF2546415800BF0C4A /* WaterFaucet.swift */; };
+		7F0B46BA2546753700BF0C4A /* SolutionStepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0B46B92546753700BF0C4A /* SolutionStepTableViewCell.swift */; };
 		7FB35D152544CC20008EDBFE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB35D142544CC20008EDBFE /* AppDelegate.swift */; };
 		7FB35D172544CC20008EDBFE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB35D162544CC20008EDBFE /* SceneDelegate.swift */; };
 		7FB35D192544CC20008EDBFE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB35D182544CC20008EDBFE /* ViewController.swift */; };
@@ -16,6 +19,7 @@
 		7FB35D242544CC25008EDBFE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FB35D222544CC25008EDBFE /* LaunchScreen.storyboard */; };
 		7FB35D2F2544CC25008EDBFE /* waterJugChallengeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB35D2E2544CC25008EDBFE /* waterJugChallengeTests.swift */; };
 		7FB35D3A2544CC25008EDBFE /* waterJugChallengeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB35D392544CC25008EDBFE /* waterJugChallengeUITests.swift */; };
+		7FB35D4B2544CC5E008EDBFE /* WaterSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB35D4A2544CC5E008EDBFE /* WaterSolver.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +40,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7F0B46A42545C24200BF0C4A /* WaterJug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterJug.swift; sourceTree = "<group>"; };
+		7F0B46AF2546415800BF0C4A /* WaterFaucet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterFaucet.swift; sourceTree = "<group>"; };
+		7F0B46B92546753700BF0C4A /* SolutionStepTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolutionStepTableViewCell.swift; sourceTree = "<group>"; };
 		7FB35D112544CC20008EDBFE /* waterJugChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = waterJugChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FB35D142544CC20008EDBFE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7FB35D162544CC20008EDBFE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +58,7 @@
 		7FB35D352544CC25008EDBFE /* waterJugChallengeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = waterJugChallengeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FB35D392544CC25008EDBFE /* waterJugChallengeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = waterJugChallengeUITests.swift; sourceTree = "<group>"; };
 		7FB35D3B2544CC25008EDBFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7FB35D4A2544CC5E008EDBFE /* WaterSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterSolver.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +117,10 @@
 				7FB35D222544CC25008EDBFE /* LaunchScreen.storyboard */,
 				7FB35D252544CC25008EDBFE /* Info.plist */,
 				7FB35D1D2544CC20008EDBFE /* waterJugChallenge.xcdatamodeld */,
+				7FB35D4A2544CC5E008EDBFE /* WaterSolver.swift */,
+				7F0B46A42545C24200BF0C4A /* WaterJug.swift */,
+				7F0B46AF2546415800BF0C4A /* WaterFaucet.swift */,
+				7F0B46B92546753700BF0C4A /* SolutionStepTableViewCell.swift */,
 			);
 			path = waterJugChallenge;
 			sourceTree = "<group>";
@@ -261,9 +273,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FB35D4B2544CC5E008EDBFE /* WaterSolver.swift in Sources */,
 				7FB35D192544CC20008EDBFE /* ViewController.swift in Sources */,
+				7F0B46B02546415800BF0C4A /* WaterFaucet.swift in Sources */,
 				7FB35D152544CC20008EDBFE /* AppDelegate.swift in Sources */,
 				7FB35D1F2544CC20008EDBFE /* waterJugChallenge.xcdatamodeld in Sources */,
+				7F0B46A52545C24200BF0C4A /* WaterJug.swift in Sources */,
+				7F0B46BA2546753700BF0C4A /* SolutionStepTableViewCell.swift in Sources */,
 				7FB35D172544CC20008EDBFE /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -443,6 +459,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9K4JT24X2J;
 				INFOPLIST_FILE = waterJugChallenge/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -450,7 +467,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.arcbased.waterJugChallenge;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -462,6 +479,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9K4JT24X2J;
 				INFOPLIST_FILE = waterJugChallenge/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -469,7 +487,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.arcbased.waterJugChallenge;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
